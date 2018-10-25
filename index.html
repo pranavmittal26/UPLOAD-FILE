@@ -1,0 +1,34 @@
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+</head>
+<body>
+  <input type="file" id="fileInput"  onchange="uploadFile()">
+  <script>
+    function uploadFile(){
+    var socket = io.connect('http://localhost:4000')
+    var x = document.getElementById("fileInput");
+      var file =x.files[0]
+      var fileReader = new FileReader(),
+        slice = file.slice(0, 100000);
+    fileReader.readAsArrayBuffer(slice);
+    fileReader.onload = (data) => {
+        var arrayBuffer = fileReader.result;
+        console.log(arrayBuffer)
+        socket.emit('upload', {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            data: arrayBuffer
+        });
+    }
+    socket.on('get_file', (data) => {
+        var place = data.currentSlice * 100000,
+            slice = file.slice(place, place + Math.min(100000, file.size - place));
+        fileReader.readAsArrayBuffer(slice);
+    });
+    }
+  </script>
+</body>
+</html>
