@@ -34,7 +34,7 @@ socket.on('upload', (data) => {
     if (files[data.name].slice * 100000 >= files[data.name].size) {
         var fileBuffer = Buffer.concat(files[data.name].data);
        
-        fs.writeFile('./upload' +data.name,fileBuffer,(err)=>{
+        fs.writeFile('./upload/' +data.name,fileBuffer,(err)=>{
       socket.emit('upload_completed')
     });
     }
