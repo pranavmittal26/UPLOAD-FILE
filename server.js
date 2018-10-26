@@ -35,6 +35,8 @@ socket.on('upload', (data) => {
         var fileBuffer = Buffer.concat(files[data.name].data);
        
         fs.writeFile('./upload/' +data.name,fileBuffer,(err)=>{
+          delete files[data.name]; 
+        if (err) return socket.emit('upload error');
       socket.emit('upload_completed')
     });
     }
